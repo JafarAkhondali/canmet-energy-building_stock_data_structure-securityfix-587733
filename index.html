@@ -2,20 +2,19 @@
 <html>
 
 <head>
-    <title>Custom validators, async validators etc</title>
+    <title>Building Stock Data Structure</title>
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
 </head>
 
 <body ng-app="test" class="container" ng-controller="TestCtrl">
 
-    <h3>Demo of custom validators, async validators and parsers</h3>
-    <span>Psst... check the source!</span>
+    <h3>Building Stock Data Structure</h3>
     <form name="theForm">
         <div sf-schema="schema" sf-form="form" sf-model="model"></div>
         <div>
-            The form is <em ng-show="theForm.$pristine">pristine</em><em ng-show="theForm.$dirty">dirty</em> and <em ng-show="theForm.$valid">valid</em>
-            <em ng-show="!theForm.$valid">invalid</em>.
+            <!--The form is <em ng-show="theForm.$pristine">pristine</em><em ng-show="theForm.$dirty">dirty</em> and <em ng-show="theForm.$valid">valid</em>
+            <em ng-show="!theForm.$valid">invalid</em>.-->
         </div>
         <div>{{prettyModel}}</div>
     </form>
@@ -36,24 +35,31 @@
                 "type": "object",
                 "properties": {
                     "street_address": {
+                        "title": "Street address",
                         "type": "string"
                     },
                     "city": {
+                        "title": "City",
                         "type": "string"
                     },
                     "state_province": {
+                        "title": "State/Province",
                         "type": "string"
                     },
                     "postal-code": {
+                        "title": "Postal Code",
                         "type": "string"
                     },
                     "country-name": {
+                        "title": "Country",
                         "type": "string"
                     },
                     "data-source-name": {
+                        "title": "Name of Data Source",
                         "type": "string"
                     },
                     "data-source-email": {
+                        "title": "Email of Data Source",
                         "type": "string"
                     },
                     "building-type": {
@@ -105,135 +111,138 @@
                         ]
                     },
                     "dominant-heating-system": {
-                        "title": "Dominant Heating System",
-                        "system-fuel": {
-                            "title": "Main fuel source",
-                            "type": "string",
-                            "enum": ["Electricity",
-                                "Natural Gas",
-                                "Unconditioned"
-                            ]
-                        },
-                        "system-type": {
-                            "type": "string",
-                            "enum": ["system1",
-                                "system2",
-                                "etc"
-                            ]
-                        },
-                        "system-efficiency": {
-                            "type": "string",
-                            "enum": ["low",
-                                "medium",
-                                "high"
-                            ]
-                        },
-                        "system-vintage": {
-                            "type": "string",
-                            "pattern": "^\\d\\d\\d\\d$",
-                            "minLength": 4,
-                            "maxLength": 4
-                        }
+                        "title": "Dominant Heating System"
+                    },
+                    "dominant-heating-system-fuel": {
+                        "title": "Dominant heating system\'s main fuel source",
+                        "type": "string",
+                        "enum": ["Electricity",
+                            "Natural Gas",
+                            "Unconditioned"
+                        ]
+                    },
+                    "dominant-heating-system-type": {
+                        "title": "Dominant heating system type",
+                        "type": "string",
+                        "enum": ["system1",
+                            "system2",
+                            "etc"
+                        ]
+                    },
+                    "dominant-heating-system-efficiency": {
+                        "title": "Dominant heating system efficency",
+                        "type": "string",
+                        "enum": ["low",
+                            "medium",
+                            "high"
+                        ]
+                    },
+                    "dominant-heating-system-vintage": {
+                        "title": "Dominant heating system vintage",
+                        "type": "string",
+                        "pattern": "^\\d\\d\\d\\d$",
+                        "minLength": 4,
+                        "maxLength": 4
                     },
                     "simulation_model": {
                         "title": "Simulation File if available",
                         "description": "Simulation files available for processing. Should be zipped and base64 encoded.",
-                        "file-format": {
-                            "title": "file-format",
-                            "type": "string",
-                            "enum": ["OpenStudio",
-                                "DOE 2.2",
-                                "eQuest",
-                                "EE4",
-                                "CAN-Quest",
-                                "IES-VE",
-                                "Trane-Trace",
-                                "HAP"
-                            ]
-                        },
-                        "based64-zipped_file": {
-                            "title": "based64-zipped_file",
-                            "type": "string"
-                        }
+                    },
+                    "simulation_model-file-format": {
+                        "title": "simulation_model file-format",
+                        "type": "string",
+                        "enum": ["OpenStudio",
+                            "DOE 2.2",
+                            "eQuest",
+                            "EE4",
+                            "CAN-Quest",
+                            "IES-VE",
+                            "Trane-Trace",
+                            "HAP"
+                        ]
+                    },
+                    "simulation_model-based64-zipped_file": {
+                        "title": "Simulation model based64-zipped_file",
+                        "type": "string"
                     },
                     "cad_data": {
                         "title": "CAD files if available",
-                        "description": "Linked CAD files available for processing. Should be zipped and based64 encoded.",
-                        "file-format": {
-                            "title": "file-format",
-                            "type": "string",
-                            "enum": ["AutoCad",
-                                "ArchiCad, Sketchup"
-                            ]
-                        },
-                        "based64-zipped_file": {
-                            "title": "based64-zipped_file",
-                            "type": "string"
-                        }
+                        "description": "Linked CAD files available for processing. Should be zipped and based64 encoded."
+                    },
+                    "cad_data-file-format": {
+                        "title": "CAD file format",
+                        "type": "string",
+                        "enum": ["AutoCad",
+                            "ArchiCad, Sketchup"
+                        ]
+                    },
+                    "cad_data-based64-zipped_file": {
+                        "title": "CAD based64-zipped_file",
+                        "type": "string"
                     },
                     "bim_data": {
                         "title": "Linked BIM files if available",
-                        "description": "BIM files available for processing. Should be zipped and based64 encoded.",
-                        "file-format": {
-                            "title": "file-format",
-                            "type": "string",
-                            "enum": ["Revit"]
-                        },
-                        "based64-zipped_file": {
-                            "title": "based64-zipped_file",
-                            "type": "string"
-                        }
+                        "description": "BIM files available for processing. Should be zipped and based64 encoded."
+                    },
+                    "bim_data-file-format": {
+                        "title": "bim_data file-format",
+                        "type": "string",
+                        "enum": ["Revit"]
+                    },
+                    "bim_data-based64-zipped_file": {
+                        "title": "bim_data based64-zipped_file",
+                        "type": "string"
                     },
                     "exterior-walls": {
-                        "title": "Exterior Wall Information.",
-                        "framing-type": {
-                            "title": "Type of construction.",
-                            "type": "string",
-                            "enum": ["Mass",
-                                "Wood Frame",
-                                "Steel Frame"
-                            ]
-                        },
-                        "conductance": {
-                            "title": "Conductance W/m2*K)",
-                            "type": "number",
-                            "minNumber": 0.5,
-                            "maxNumber": 4.0
-                        }
+                        "title": "Exterior Wall Information."
+                    },
+                    "exterior-walls-framing-type": {
+                        "title": "exterior-walls Type of construction.",
+                        "type": "string",
+                        "enum": ["Mass",
+                            "Wood Frame",
+                            "Steel Frame"
+                        ]
+                    },
+                    "exterior-walls-conductance": {
+                        "title": "exterior-walls Conductance W/m2*K)",
+                        "type": "number",
+                        "minNumber": 0.5,
+                        "maxNumber": 4.0
                     },
                     "exterior-roof": {
-                        "title": "Roof Information.",
-                        "framing-type": {
-                            "title": "Type of construction.",
-                            "type": "string",
-                            "enum": ["Mass",
-                                "Wood Frame",
-                                "Steel Frame"
-                            ]
-                        },
-                        "conductance": {
-                            "title": "Conductance W/m2*K)",
-                            "type": "number",
-                            "minNumber": 0.5,
-                            "maxNumber": 4.0
-                        }
+                        "title": "Roof Information."
+                    },
+                    "exterior-roof-framing-type": {
+                        "title": "exterior-roof Type of construction.",
+                        "type": "string",
+                        "enum": ["Mass",
+                            "Wood Frame",
+                            "Steel Frame"
+                        ]
+                    },
+                    "exterior-roof-conductance": {
+                        "title": "exterior-roof Conductance W/m2*K)",
+                        "type": "number",
+                        "minNumber": 0.5,
+                        "maxNumber": 4.0
                     },
                     "exterior-windows": {
-                        "title": "Roof Information.",
-                        "framing-type": {
-                            "title": "Type of construction.",
-                            "type": "string",
-                            "enum": ["Mass",
-                                "Wood Frame",
-                                "Steel Frame"
-                            ]
-                        },
-                        "conductance": {
-                            "title": "Conductance W/m2*K)",
-                            "type": "number",
-                            "minNumber": 0.5,
-                            "maxNumber": 4.0
-                        }
+                        "title": "Roof Information."
+                    },
+                    "exterior-windows-framing-type": {
+                        "title": "exterior-windows Type of construction.",
+                        "type": "string",
+                        "enum": ["Mass",
+                            "Wood Frame",
+                            "Steel Frame"
+                        ]
+                    },
+                    "exterior-windows-conductance": {
+                        "title": "exterior-windows Conductance W/m2*K)",
+                        "type": "number",
+                        "minNumber": 0.5,
+                        "maxNumber": 4.0
                     },
                     "fdwr": {
                         "title": "Window & Door / Total Wall Area Ratio)",
@@ -245,19 +254,7 @@
             }
 
             $scope.form = [
-                "street_address",
-                "city",
-                "building-type",
-                "building-vintage",
-                "building-conditioned_floor_area",
-                "building-above-ground-stories",
-                "building-below-grade-stories",
-                "dominant-heating-fuel",
-                "bim_data",
-                "exterior-walls.framing-type",
-
-
-                "fdwr",
+                "*",
                 {
                     "type": "submit",
                     "style": "btn-info",
