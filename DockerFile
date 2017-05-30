@@ -1,0 +1,18 @@
+FROM alpine:3.6
+
+ENV BUILD_PACKAGES bash curl-dev git nodejs
+
+RUN apk update && \
+	apk upgrade && \
+	apk add $BUILD_PACKAGES && \
+    #apk add nodejs=6.2.0-r0 && \
+	rm -rf /var/cache/apk/*
+
+RUN git clone https://github.com/canmet-energy/building_stock_data_structure.git bsds && \
+    cd bsds && pwd 
+
+EXPOSE  8090
+
+WORKDIR /bsds
+
+CMD ["node", "/bsds/index.js"]
