@@ -1,0 +1,22 @@
+{
+  "name": "building_stock_data_structure",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/canmet-energy/building_stock_data_structure.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/canmet-energy/building_stock_data_structure/issues"
+  },
+  "homepage": "https://github.com/canmet-energy/building_stock_data_structure#readme",
+  "dependencies": {
+    "angular-schema-form": "^0.8.13"
+  }
+}

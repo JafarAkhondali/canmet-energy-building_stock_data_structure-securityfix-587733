@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Custom validators, async validators etc</title>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
+</head>
+
+<body ng-app="test" class="container" ng-controller="TestCtrl">
+
+    <h3>Demo of custom validators, async validators and parsers</h3>
+    <span>Psst... check the source!</span>
+    <form name="theForm">
+        <div sf-schema="schema" sf-form="form" sf-model="model"></div>
+        <div>
+            The form is <em ng-show="theForm.$pristine">pristine</em><em ng-show="theForm.$dirty">dirty</em> and <em ng-show="theForm.$valid">valid</em>
+            <em ng-show="!theForm.$valid">invalid</em>.
+        </div>
+        <div>{{prettyModel}}</div>
+    </form>
+
+    <script type="text/javascript" src="./bower_components/tv4/tv4.js"></script>
+    <script type="text/javascript" src="./bower_components/angular/angular.min.js"></script>
+    <script type="text/javascript" src="./bower_components/angular-sanitize/angular-sanitize.min.js"></script>
+
+    <script type="text/javascript" src="./bower_components/objectpath/lib/ObjectPath.js"></script>
+
+    <script type="text/javascript" src="./bower_components/angular-schema-form/dist/schema-form.js"></script>
+    <script type="text/javascript" src="./bower_components/angular-schema-form/dist/bootstrap-decorator.min.js"></script>
+
+    <script>
+        angular.module('test', ['schemaForm']).controller('TestCtrl', function ($scope, $q, $timeout) {
+
+            $scope.schema = {
+                "type": "object",
+                "properties": {
+                    "street_address": {
+                        "type": "string"
+                    },
+                    "city": {
+                        "type": "string"
+                    },
+                    "state_province": {
+                        "type": "string"
+                    },
+                    "postal-code": {
+                        "type": "string"
+                    },
+                    "country-name": {
+                        "type": "string"
+                    },
+                    "data-source-name": {
+                        "type": "string"
+                    },
+                    "data-source-email": {
+                        "type": "string"
+                    },
+                    "building-type": {
+                        "title": "Building Type",
+                        "type": "string",
+                        "enum": ["FullServiceRestaurant",
+                            "Hospital",
+                            "HighriseApartment",
+                            "LargeHotel",
+                            "LargeOffice",
+                            "MediumOffice",
+                            "MidriseApartment",
+                            "Outpatient",
+                            "PrimarySchool",
+                            "QuickServiceRestaurant",
+                            "RetailStandalone",
+                            "SecondarySchool",
+                            "SmallHotel",
+                            "SmallOffice",
+                            "RetailStripmall",
+                            "Warehouse"
+                        ]
+                    },
+                    "building-vintage": {
+                        "title": "Year built or completely renovated.",
+                        "type": "string",
+                        "pattern": "^\\d\\d\\d\\d$",
+                        "minLength": 4,
+                        "maxLength": 4
+                    },
+                    "building-conditioned_floor_area": {
+                        "title": "Floor area of building that is heated and/or cooled.",
+                        "type": "number"
+                    },
+                    "building-above-ground-stories": {
+                        "title": "Total number of above ground stories that are conditioned",
+                        "type": "number"
+                    },
+                    "building-below-grade-stories": {
+                        "title": "Total number of below ground stories that are conditioned",
+                        "type": "number"
+                    },
+                    "dominant-heating-fuel": {
+                        "title": "Main fuel source of building heating",
+                        "type": "string",
+                        "enum": ["Electricity",
+                            "Natural Gas",
+                            "Unconditioned"
+                        ]
+                    },
+                    "dominant-heating-system": {
+                        "title": "Dominant Heating System",
+                        "system-fuel": {
+                            "title": "Main fuel source",
+                            "type": "string",
+                            "enum": ["Electricity",
+                                "Natural Gas",
+                                "Unconditioned"
+                            ]
+                        },
+                        "system-type": {
+                            "type": "string",
+                            "enum": ["system1",
+                                "system2",
+                                "etc"
+                            ]
+                        },
+                        "system-efficiency": {
+                            "type": "string",
+                            "enum": ["low",
+                                "medium",
+                                "high"
+                            ]
+                        },
+                        "system-vintage": {
+                            "type": "string",
+                            "pattern": "^\\d\\d\\d\\d$",
+                            "minLength": 4,
+                            "maxLength": 4
+                        }
+                    },
+                    "simulation_model": {
+                        "title": "Simulation File if available",
+                        "description": "Simulation files available for processing. Should be zipped and base64 encoded.",
+                        "file-format": {
+                            "title": "file-format",
+                            "type": "string",
+                            "enum": ["OpenStudio",
+                                "DOE 2.2",
+                                "eQuest",
+                                "EE4",
+                                "CAN-Quest",
+                                "IES-VE",
+                                "Trane-Trace",
+                                "HAP"
+                            ]
+                        },
+                        "based64-zipped_file": {
+                            "title": "based64-zipped_file",
+                            "type": "string"
+                        }
+                    },
+                    "cad_data": {
+                        "title": "CAD files if available",
+                        "description": "Linked CAD files available for processing. Should be zipped and based64 encoded.",
+                        "file-format": {
+                            "title": "file-format",
+                            "type": "string",
+                            "enum": ["AutoCad",
+                                "ArchiCad, Sketchup"
+                            ]
+                        },
+                        "based64-zipped_file": {
+                            "title": "based64-zipped_file",
+                            "type": "string"
+                        }
+                    },
+                    "bim_data": {
+                        "title": "Linked BIM files if available",
+                        "description": "BIM files available for processing. Should be zipped and based64 encoded.",
+                        "file-format": {
+                            "title": "file-format",
+                            "type": "string",
+                            "enum": ["Revit"]
+                        },
+                        "based64-zipped_file": {
+                            "title": "based64-zipped_file",
+                            "type": "string"
+                        }
+                    },
+                    "exterior-walls": {
+                        "title": "Exterior Wall Information.",
+                        "framing-type": {
+                            "title": "Type of construction.",
+                            "type": "string",
+                            "enum": ["Mass",
+                                "Wood Frame",
+                                "Steel Frame"
+                            ]
+                        },
+                        "conductance": {
+                            "title": "Conductance W/m2*K)",
+                            "type": "number",
+                            "minNumber": 0.5,
+                            "maxNumber": 4.0
+                        }
+                    },
+                    "exterior-roof": {
+                        "title": "Roof Information.",
+                        "framing-type": {
+                            "title": "Type of construction.",
+                            "type": "string",
+                            "enum": ["Mass",
+                                "Wood Frame",
+                                "Steel Frame"
+                            ]
+                        },
+                        "conductance": {
+                            "title": "Conductance W/m2*K)",
+                            "type": "number",
+                            "minNumber": 0.5,
+                            "maxNumber": 4.0
+                        }
+                    },
+                    "exterior-windows": {
+                        "title": "Roof Information.",
+                        "framing-type": {
+                            "title": "Type of construction.",
+                            "type": "string",
+                            "enum": ["Mass",
+                                "Wood Frame",
+                                "Steel Frame"
+                            ]
+                        },
+                        "conductance": {
+                            "title": "Conductance W/m2*K)",
+                            "type": "number",
+                            "minNumber": 0.5,
+                            "maxNumber": 4.0
+                        }
+                    },
+                    "fdwr": {
+                        "title": "Window & Door / Total Wall Area Ratio)",
+                        "type": "number",
+                        "minimum": 0.5,
+                        "maximum": 4.0
+                    }
+                }
+            }
+
+            $scope.form = [
+                "street_address",
+                "city",
+                "building-type",
+                "building-vintage",
+                "building-conditioned_floor_area",
+                "building-above-ground-stories",
+                "building-below-grade-stories",
+                "dominant-heating-fuel",
+                "bim_data",
+                "exterior-walls.framing-type",
+
+
+                "fdwr",
+                {
+                    "type": "submit",
+                    "style": "btn-info",
+                    "title": "OK"
+                }
+            ];
+
+            $scope.model = {};
+
+            $scope.$watch('model', function (value) {
+                if (value) {
+                    $scope.prettyModel = JSON.stringify(value, undefined, 2);
+                }
+            }, true);
+
+        });
+    </script>
+
+
+</body>
+
+</html>
